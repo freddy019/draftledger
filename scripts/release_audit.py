@@ -142,7 +142,7 @@ def audit_json(findings: list[Finding]) -> dict[Path, object]:
 
 def audit_json_schemas(findings: list[Finding], parsed: dict[Path, object], generated: dict[str, Path] | None = None) -> None:
     try:
-        from jsonschema import Draft202012Validator  # type: ignore
+        from jsonschema import Draft202012Validator, FormatChecker  # type: ignore
     except ImportError:
         add(findings, "WARN", "JSONSCHEMA_UNAVAILABLE", "jsonschema is not installed; schema meta-validation and instance validation were skipped")
         return
@@ -168,12 +168,13 @@ def audit_json_schemas(findings: list[Finding], parsed: dict[Path, object], gene
         "context-manifest.schema.json": ["examples/context-manifest-clean.json", "examples/context-manifest-contaminated.json"],
         "revalidation-plan.schema.json": ["examples/revalidation-plan.json"],
         "revalidation-resolution.schema.json": ["examples/revalidation-resolution.json"],
+        "handoff.schema.json": ["examples/handoff-board.json", "templates/handoff.json"],
     }
     for schema_name, rels in static_map.items():
         schema = schemas.get(schema_name)
         if schema is None:
             continue
-        validator = Draft202012Validator(schema)
+        validator = Draft202012Validator(schema, format_checker=FormatChecker())
         for rel in rels:
             path = ROOT / rel
             obj = parsed.get(path)
@@ -196,7 +197,7 @@ def audit_json_schemas(findings: list[Finding], parsed: dict[Path, object], gene
             if path is None or schema is None or not path.exists():
                 continue
             obj = json.loads(path.read_text(encoding="utf-8"))
-            for err in Draft202012Validator(schema).iter_errors(obj):
+            for err in Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(obj):
                 add(findings, "ERROR", "GENERATED_SCHEMA_INSTANCE", f"generated {key} vs {schema_name} at {list(err.path)}: {err.message}")
 
 
@@ -232,6 +233,7 @@ def audit_cli_help(findings: list[Finding]) -> None:
     cli_scripts = [
         "context_lint.py", "state_diff.py", "revalidate.py", "state_vcs.py", "context_trace.py",
         "context_compile.py", "retrieval_gate.py", "hardening_check.py", "release_audit.py", "build_release.py",
+        "handoff.py",
     ]
     for script in cli_scripts:
         path = ROOT / "scripts" / script
@@ -279,6 +281,36 @@ def audit_smoke(findings: list[Finding]) -> dict[str, Path]:
         run_cmd(findings, "SMOKE_VCS_BRANCH", [sys.executable, "scripts/state_vcs.py", "--repo", str(vcs), "branch", "scenario-b"])
         run_cmd(findings, "SMOKE_VCS_DIFF", [sys.executable, "scripts/state_vcs.py", "--repo", str(vcs), "diff", "main", "scenario-b", "--json"])
         run_cmd(findings, "SMOKE_VCS_MERGE", [sys.executable, "scripts/state_vcs.py", "--repo", str(vcs), "merge", "scenario-b", "--json"])
+
+        handoff = tmp / "handoff.json"
+        run_cmd(findings, "SMOKE_HANDOFF_INIT", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "init",
+            "--project-name", "audit", "--objective", "Parallel audit work",
+            "--state", "examples/sample-state.json", "--at", "2026-09-17T00:00:00Z",
+        ])
+        run_cmd(findings, "SMOKE_HANDOFF_ADD", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "add", "W-audit",
+            "--title", "Audit", "--objective", "Run checks", "--accept", "Checks pass",
+            "--scope", "release-audit",
+            "--expected-revision", "0", "--at", "2026-09-17T00:01:00Z",
+        ])
+        run_cmd(findings, "SMOKE_HANDOFF_REGISTER", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "register", "audit-agent",
+            "--thread-ref", "release-audit", "--expected-revision", "1", "--at", "2026-09-17T00:02:00Z",
+        ])
+        run_cmd(findings, "SMOKE_HANDOFF_CLAIM", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "claim", "W-audit",
+            "--agent", "audit-agent", "--expected-revision", "2", "--at", "2026-09-17T00:03:00Z",
+        ])
+        run_cmd(findings, "SMOKE_HANDOFF_COMPLETE", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "complete", "W-audit",
+            "--agent", "audit-agent", "--summary", "Checks passed", "--output", "audit.txt",
+            "--expected-revision", "3", "--at", "2026-09-17T00:04:00Z",
+        ])
+        run_cmd(findings, "SMOKE_HANDOFF_LINT", [
+            sys.executable, "scripts/handoff.py", "--board", str(handoff), "lint",
+            "--state", "examples/sample-state.json", "--strict",
+        ])
 
         # Keep generated documents alive for schema checks after the temp dir closes.
         cache = Path(tempfile.mkdtemp(prefix="asg-schema-audit-"))

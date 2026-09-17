@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "handoff_id": "H-release",
+  "revision": 5,
+  "project": {
+    "name": "agent-state-governance",
+    "objective": "Prepare a release using parallel documentation and verification workstreams."
+  },
+  "created_at": "2026-09-17T00:00:00Z",
+  "updated_at": "2026-09-17T00:12:00Z",
+  "coordination": {
+    "content_plane": "data",
+    "claim_policy": "single-owner-with-lease",
+    "integration_policy": "explicit-review-before-merge"
+  },
+  "base_state": null,
+  "agents": [
+    {
+      "id": "docs-agent",
+      "thread_ref": "thread-docs",
+      "status": "active",
+      "registered_at": "2026-09-17T00:01:00Z",
+      "last_seen_at": "2026-09-17T00:12:00Z"
+    }
+  ],
+  "work_items": [
+    {
+      "id": "W-docs",
+      "title": "Review release documentation",
+      "objective": "Verify that public claims match implemented behavior.",
+      "status": "completed",
+      "owner": "docs-agent",
+      "lease_expires_at": null,
+      "depends_on": [],
+      "scope": ["README.md", "references/"],
+      "acceptance_criteria": ["Every material claim has implementation evidence."],
+      "inputs": ["README.md", "SKILL.md"],
+      "outputs": [
+        {
+          "path": "RELEASE_NOTES.md",
+          "recorded_at": "2026-09-17T00:12:00Z",
+          "actor": "docs-agent"
+        }
+      ],
+      "progress": [
+        {
+          "at": "2026-09-17T00:08:00Z",
+          "actor": "docs-agent",
+          "message": "Cross-check complete.",
+          "artifacts": ["README.md"]
+        }
+      ],
+      "blockers": [],
+      "completion": {
+        "at": "2026-09-17T00:12:00Z",
+        "actor": "docs-agent",
+        "summary": "Documentation claims match the audited behavior."
+      },
+      "created_at": "2026-09-17T00:02:00Z",
+      "updated_at": "2026-09-17T00:12:00Z"
+    }
+  ],
+  "events": [
+    {"id": "E-000001", "at": "2026-09-17T00:00:00Z", "type": "board_initialized", "actor": "system", "details": {}},
+    {"id": "E-000002", "at": "2026-09-17T00:01:00Z", "type": "agent_registered", "actor": "docs-agent", "details": {}},
+    {"id": "E-000003", "at": "2026-09-17T00:02:00Z", "type": "work_added", "actor": "coordinator", "work_item_id": "W-docs", "details": {}},
+    {"id": "E-000004", "at": "2026-09-17T00:03:00Z", "type": "work_claimed", "actor": "docs-agent", "work_item_id": "W-docs", "details": {"lease_minutes": 60}},
+    {"id": "E-000005", "at": "2026-09-17T00:08:00Z", "type": "progress_recorded", "actor": "docs-agent", "work_item_id": "W-docs", "details": {}},
+    {"id": "E-000006", "at": "2026-09-17T00:12:00Z", "type": "work_completed", "actor": "docs-agent", "work_item_id": "W-docs", "details": {"summary": "Documentation claims match the audited behavior.", "outputs": ["RELEASE_NOTES.md"]}}
+  ]
+}

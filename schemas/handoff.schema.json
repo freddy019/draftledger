@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agent-state-governance/handoff.schema.json",
+  "title": "Agent State Governance Handoff Board",
+  "type": "object",
+  "required": ["version", "handoff_id", "revision", "project", "created_at", "updated_at", "coordination", "base_state", "agents", "work_items", "events"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "handoff_id": {"type": "string", "pattern": "^H-[A-Za-z0-9][A-Za-z0-9._-]{0,62}$"},
+    "revision": {"type": "integer", "minimum": 0},
+    "project": {
+      "type": "object",
+      "required": ["name", "objective"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "objective": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "coordination": {
+      "type": "object",
+      "required": ["content_plane", "claim_policy", "integration_policy"],
+      "properties": {
+        "content_plane": {"const": "data"},
+        "claim_policy": {"const": "single-owner-with-lease"},
+        "integration_policy": {"const": "explicit-review-before-merge"}
+      },
+      "additionalProperties": false
+    },
+    "base_state": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["path", "fingerprint"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "thread_ref", "status", "registered_at", "last_seen_at"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"},
+          "thread_ref": {"type": ["string", "null"]},
+          "status": {"enum": ["active", "inactive"]},
+          "registered_at": {"type": "string", "format": "date-time"},
+          "last_seen_at": {"type": "string", "format": "date-time"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "work_items": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/workItem"}
+    },
+    "events": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/event"}
+    }
+  },
+  "$defs": {
+    "stringArray": {"type": "array", "items": {"type": "string"}},
+    "workItem": {
+      "type": "object",
+      "required": ["id", "title", "objective", "status", "owner", "lease_expires_at", "depends_on", "scope", "acceptance_criteria", "inputs", "outputs", "progress", "blockers", "created_at", "updated_at"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^W-[A-Za-z0-9][A-Za-z0-9._-]{0,62}$"},
+        "title": {"type": "string", "minLength": 1},
+        "objective": {"type": "string", "minLength": 1},
+        "status": {"enum": ["ready", "claimed", "blocked", "completed", "cancelled"]},
+        "owner": {"type": ["string", "null"]},
+        "lease_expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "depends_on": {"$ref": "#/$defs/stringArray"},
+        "scope": {"allOf": [{"$ref": "#/$defs/stringArray"}, {"minItems": 1}]},
+        "acceptance_criteria": {"allOf": [{"$ref": "#/$defs/stringArray"}, {"minItems": 1}]},
+        "inputs": {"$ref": "#/$defs/stringArray"},
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "recorded_at", "actor"],
+            "properties": {
+              "path": {"type": "string"},
+              "recorded_at": {"type": "string", "format": "date-time"},
+              "actor": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "progress": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["at", "actor", "message", "artifacts"],
+            "properties": {
+              "at": {"type": "string", "format": "date-time"},
+              "actor": {"type": "string"},
+              "message": {"type": "string", "minLength": 1},
+              "artifacts": {"$ref": "#/$defs/stringArray"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "status", "reason", "created_at"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^B-[0-9]{3,}$"},
+              "status": {"enum": ["open", "resolved"]},
+              "reason": {"type": "string", "minLength": 1},
+              "created_at": {"type": "string", "format": "date-time"},
+              "resolution": {"type": "string"},
+              "resolved_at": {"type": "string", "format": "date-time"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "completion": {
+          "type": "object",
+          "required": ["at", "actor", "summary"],
+          "properties": {
+            "at": {"type": "string", "format": "date-time"},
+            "actor": {"type": "string"},
+            "summary": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": ["id", "at", "type", "actor", "details"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^E-[0-9]{6,}$"},
+        "at": {"type": "string", "format": "date-time"},
+        "type": {"type": "string", "minLength": 1},
+        "actor": {"type": "string", "minLength": 1},
+        "work_item_id": {"type": "string"},
+        "details": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

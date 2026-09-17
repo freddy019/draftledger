@@ -14,6 +14,7 @@ v0.9 treats state management as a security boundary, not only a convenience laye
 - concurrent State VCS mutations that would otherwise lose updates;
 - partial writes or process failure during file replacement;
 - silent semantic-state corruption after merge or revalidation.
+- lost updates, duplicate ownership, stale writers, and abandoned claims during multi-agent handoff.
 
 ## Threats out of scope
 
@@ -41,6 +42,8 @@ Writes use a same-directory temporary file, flush + `fsync`, and atomic `os.repl
 Mutating CLI operations acquire a repository advisory lock before reading/updating branch metadata. Checkpoints remain content-addressed and immutable. Integrity is verified by both checkpoint ID and state hash on read.
 
 The lock is process-level coordination, not a distributed lock. Network filesystems with weak locking semantics require additional host-level coordination.
+
+The Handoff Board uses the same local lock and atomic replacement. It also uses a monotonically increasing revision for optimistic concurrency. A caller acting on a previously read board should pass `--expected-revision`; a mismatch fails before mutation. Leases make abandoned claims visible but do not transfer ownership automatically. Another agent must explicitly take over an expired claim or blocked item, leaving an event in the board.
 
 ## Prompt injection boundary
 

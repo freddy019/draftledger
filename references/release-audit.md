@@ -5,7 +5,7 @@ The release audit verifies that the repository can be consumed both as an Agent 
 Run:
 
 ```bash
-python scripts/release_audit.py --full
+python scripts/release_audit.py --full --strict
 ```
 
 The audit checks:
@@ -15,7 +15,7 @@ The audit checks:
 - JSON syntax, protocol versions, and JSON Schema validity when `jsonschema` is installed;
 - static example/schema compatibility;
 - Python compilation and CLI `--help` behavior;
-- hardening, context compilation, provenance, revalidation, State VCS, and retrieval-gate smoke flows;
+- hardening, context compilation, provenance, revalidation, State VCS, retrieval-gate, and multi-agent handoff smoke flows;
 - the full unit test suite with `--full`;
 - release-tree hygiene warnings for caches and local state.
 

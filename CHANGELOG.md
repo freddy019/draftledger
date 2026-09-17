@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0 — 2026-09-17
+
+- Added a governed handoff board for concurrent work across threads, sessions, and AI agents.
+- Added single-owner work claims with leases, explicit expired-claim takeover, optimistic revisions, dependency gates, progress, blockers, outputs, and append-only coordination events.
+- Added `scripts/handoff.py`, a strict handoff schema, JSON and Markdown templates, a complete example, and the multi-agent handoff protocol reference.
+- Bound handoff plans to optional governed-state fingerprints so stale plans can be detected before work continues.
+- Kept handoff content on the data plane; completion records output but does not approve integration or promote instructions.
+- Added concurrent-claim, ownership, dependency, takeover, blocker, stale-revision, stale-state, schema, and clean-template regression coverage.
+- Extended release audit smoke flows and schema validation to cover the full handoff lifecycle.
+
 ## v1.0.0 — 2026-09-17
 
 - Finalized the stable release without adding new product features; protocol stays at `1.0`.

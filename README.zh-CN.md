@@ -4,7 +4,7 @@
 
 Agent State Governance 是一个面向长期 AI 任务的 Agent Skill。它在原始对话和模型推理之间增加一层轻量的“状态控制层”，防止事实、假设、指令、决策和压缩摘要在长时间任务中逐渐混为一谈。
 
-**发布状态：** `1.0.0`。运行时要求 Python 3.11+，仅使用标准库；公开的机器可读协议在稳定版本中保持为 `1.0`。
+**发布状态：** `1.1.0`。运行时要求 Python 3.11+，仅使用标准库；State 与 Handoff 的机器可读协议在稳定版本中保持为 `1.0`。
 
 ## 它解决什么问题
 
@@ -234,6 +234,30 @@ checkpoint -> branch -> diff -> merge -> revalidate
 
 本质上，这是给长期 Agent 增加一层 **semantic state version control**。
 
+## 多线程、多 AI 接力协作
+
+v1.1 新增了可机器校验的接力协作板，用于多个线程、Session 或 AI 同时处理一个项目。它记录工作项范围、依赖、单一当前负责人、有期限的领取、进度、阻塞、产出与审计事件。
+
+```bash
+python scripts/handoff.py --board .agent-state/handoff.json init \
+  --project-name my-project --objective "准备发布" \
+  --state .agent-state/state.json
+
+python scripts/handoff.py --board .agent-state/handoff.json add W-docs \
+  --title "审核文档" --objective "检查对外声明" \
+  --scope README.md --accept "声明与实际功能一致"
+
+python scripts/handoff.py --board .agent-state/handoff.json register docs-agent \
+  --thread-ref thread-123 --expected-revision 1
+
+python scripts/handoff.py --board .agent-state/handoff.json claim W-docs \
+  --agent docs-agent --expected-revision 2
+```
+
+进程锁防止本机并发写入互相覆盖，`--expected-revision` 防止读到旧版的 Agent 在稍后提交过期操作。租约过期后也不会自动转移所有权，必须显式接管并留下审计事件；依赖任务未完成时，下游任务不能被领取。
+
+接力文件始终属于 Data Plane。即使其中包含“忽略之前指令”这类文本，也不能自行升级为 Instruction。协作板可以绑定 Governed State 指纹，便于发现“按旧状态分配的工作”。详见 [`references/multi-agent-handoff.md`](references/multi-agent-handoff.md)。
+
 ## Context Provenance 与污染检测
 
 v0.6 开始区分两件以前很容易混在一起的事：**状态是否正确**，以及**真正送进模型推理的上下文是否来自正确状态**。
@@ -293,7 +317,7 @@ python scripts/context_trace.py explain \
 
 ## 当前版本
 
-`v1.0.0 Final`：正式源码版本，公开的 State / Context 协议保持为 `1.0`，运行时继续保持零第三方依赖。验证范围见 [最终审计](FINAL_AUDIT.md)，变更见 [发布说明](RELEASE_NOTES.md)。GitHub 发布准备与远端 CI 门禁见 [发布步骤](PUBLISHING.md)。
+`v1.1.0`：正式源码版本，新增多线程、多 AI 接力协作；State、Context 与 Handoff 协议保持为 `1.0`，运行时继续保持零第三方依赖。验证范围见 [最终审计](FINAL_AUDIT.md)，变更见 [发布说明](RELEASE_NOTES.md)。GitHub 发布准备与远端 CI 门禁见 [发布步骤](PUBLISHING.md)。
 
 ## 发布前审计
 
@@ -309,4 +333,3 @@ python scripts/release_audit.py --full --strict
 ## License
 
 MIT
-

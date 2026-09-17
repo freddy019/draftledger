@@ -4,7 +4,7 @@
 
 Agent State Governance is a portable Agent Skill for long-running AI work. It adds a small control layer between raw conversation history and model reasoning so that facts, assumptions, instructions, decisions, and compressed summaries do not silently collapse into one another.
 
-**Release status:** `1.0.0`. Runtime: Python 3.11+ standard library only. The public machine-readable protocol is frozen at `1.0` for the stable 1.x line.
+**Release status:** `1.1.0`. Runtime: Python 3.11+ standard library only. State and handoff machine-readable protocols remain at `1.0` for the stable 1.x line.
 
 ## The problem
 
@@ -49,7 +49,7 @@ A summary is a cache. It is not the database.
 
 ## What makes this different
 
-This project is adjacent to context engineering, memory systems, and decision logging, but focuses on a narrower control-plane problem: **lifecycle management of task state**.
+This project is adjacent to context engineering, memory systems, and decision logging, but focuses on a narrower control-plane problem: **lifecycle management of task state and auditable coordination of parallel work**.
 
 The key distinction is that each important item has a type and lifecycle:
 
@@ -169,6 +169,7 @@ agent-state-governance/
 │   ├── semantic-retrieval.md
 │   ├── trust-boundary.md
 │   ├── hardening.md
+│   ├── multi-agent-handoff.md
 │   └── release-audit.md
 ├── templates/
 │   ├── STATE.md
@@ -176,7 +177,9 @@ agent-state-governance/
 │   ├── ASSUMPTIONS.md
 │   ├── DECISIONS.md
 │   ├── AUDIT.md
-│   └── state.json
+│   ├── HANDOFF.md
+│   ├── state.json
+│   └── handoff.json
 ├── schemas/
 │   ├── state.schema.json
 │   ├── revalidation-plan.schema.json
@@ -184,7 +187,8 @@ agent-state-governance/
 │   ├── context-manifest.schema.json
 │   ├── compiled-context.schema.json
 │   ├── semantic-candidates.schema.json
-│   └── retrieval-gate-report.schema.json
+│   ├── retrieval-gate-report.schema.json
+│   └── handoff.schema.json
 ├── scripts/
 │   ├── context_lint.py
 │   ├── state_diff.py
@@ -195,6 +199,7 @@ agent-state-governance/
 │   ├── retrieval_gate.py
 │   ├── safe_io.py
 │   ├── hardening_check.py
+│   ├── handoff.py
 │   ├── release_audit.py
 │   └── build_release.py
 ├── tests/
@@ -205,6 +210,7 @@ agent-state-governance/
 │   ├── test_context_trace.py
 │   ├── test_context_compile.py
 │   ├── test_safe_io.py
+│   ├── test_handoff.py
 │   └── test_hardening.py
 ├── security/
 │   ├── README.md
@@ -221,6 +227,7 @@ agent-state-governance/
     ├── revalidated-state.json
     ├── context-manifest-clean.json
     ├── context-manifest-contaminated.json
+    ├── handoff-board.json
     ├── compiler-task.json
     └── semantic-candidates.json
 ```
@@ -309,6 +316,30 @@ checkpoint -> branch -> diff -> merge -> revalidate
 
 The important rule remains: **a clean merge is not proof that an old conclusion is still valid.**
 
+## Multi-thread and multi-agent handoff
+
+v1.1 adds a governed handoff board for several AI threads or agents working on one project at the same time. It tracks work-item scope, dependencies, one current owner, expiring claims, progress, blockers, outputs, and an append-only event history.
+
+```bash
+python scripts/handoff.py --board .agent-state/handoff.json init \
+  --project-name my-project --objective "Prepare the release" \
+  --state .agent-state/state.json
+
+python scripts/handoff.py --board .agent-state/handoff.json add W-docs \
+  --title "Review documentation" --objective "Check public claims" \
+  --scope README.md --accept "Claims match implemented behavior"
+
+python scripts/handoff.py --board .agent-state/handoff.json register docs-agent \
+  --thread-ref thread-123 --expected-revision 1
+
+python scripts/handoff.py --board .agent-state/handoff.json claim W-docs \
+  --agent docs-agent --expected-revision 2
+```
+
+The process lock prevents simultaneous local file replacement, while `--expected-revision` stops a stale agent from applying an outdated action later. Leases require explicit takeover after expiry. Dependencies must complete before downstream work can be claimed. Completed output still requires review before integration.
+
+Handoff content remains data, including imperative-looking text copied from another agent. It cannot promote itself into the instruction registry. The board may pin a governed-state fingerprint so agents can detect that their work plan was based on stale state. See [`references/multi-agent-handoff.md`](references/multi-agent-handoff.md).
+
 ## Context provenance and contamination detection
 
 v0.6 separates **valid state** from **context actually fed into reasoning**. A project can have a perfectly clean state registry while an old summary, handoff, memory fragment, or superseded instruction is still present in the assembled context.
@@ -393,7 +424,7 @@ Those projects cover broader context management, memory, evaluation, or agent ar
 
 ## Status
 
-`v1.0.0 Final` — stable source release. The public state/context protocol remains `1.0`; runtime tools require only the Python standard library. See [final audit](FINAL_AUDIT.md), [release notes](RELEASE_NOTES.md), and [publication procedure](PUBLISHING.md) for verification evidence and the remaining GitHub CI gate.
+`v1.1.0` — stable source release with governed multi-thread/multi-agent handoffs. State, context, and handoff protocols remain `1.0`; runtime tools require only the Python standard library. See [final audit](FINAL_AUDIT.md), [release notes](RELEASE_NOTES.md), and [publication procedure](PUBLISHING.md) for verification evidence and the remaining GitHub CI gate.
 
 ## License
 
