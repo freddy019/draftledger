@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Decision Revalidation Workflow for Agent State Governance.
+"""Decision Revalidation Workflow for DraftLedger.
 
 Turns ``needs_review`` decisions into an explicit review plan, then applies a
 human/agent-authored resolution without silently assuming that a replacement

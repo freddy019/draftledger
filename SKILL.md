@@ -1,9 +1,9 @@
 ---
-name: agent-state-governance
-description: Govern long-running AI task state and coordinate multi-thread or multi-agent handoffs by separating facts, assumptions, instructions, decisions, work ownership, and summaries. Use when work spans turns, sessions, threads, agents, or days; context may drift; instructions can expire; or parallel work needs auditable claims and handoffs.
+name: draftledger
+description: Preserve governed creative-process state and coordinate multi-agent handoffs for long-running work where the final artifact cannot reconstruct its sources, constraints, rejected directions, and decisions. Use for copywriting, fiction, scripts, campaigns, research synthesis, planning, or other iterative content projects spanning turns, sessions, threads, agents, or days.
 ---
 
-# Agent State Governance
+# DraftLedger
 
 Use this skill to keep long-running work coherent when conversation history, memory, summaries, tool outputs, and prior instructions can drift over time.
 

@@ -1,6 +1,6 @@
 # Trust Boundary
 
-Agent State Governance v0.8 separates **control** from **data**. This is a security boundary, not a formatting preference.
+DraftLedger separates **control** from **data**. This is a security boundary, not a formatting preference.
 
 > Data must never become instruction merely because it entered context.
 

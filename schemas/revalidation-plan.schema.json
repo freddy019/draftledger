@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Agent State Governance Revalidation Plan",
+  "title": "DraftLedger Revalidation Plan",
   "type": "object",
   "required": ["version", "decision_count", "entries"],
   "properties": {

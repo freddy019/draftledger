@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Context Lint for Agent State Governance.
+"""Context Lint for DraftLedger.
 
 Standard-library only. Validates semantic invariants that JSON Schema alone
 cannot express: dangling references, stale decision dependencies, supersession
@@ -80,7 +80,7 @@ def lint(state: dict[str, Any]) -> list[Finding]:
     decisions = by_id(groups.get("D", []))
     open_items = by_id(groups.get("O", []))
 
-    # v0.8 trust boundary: control authority is reserved for governed instructions.
+    # Trust boundary: control authority is reserved for governed instructions.
     registry_items = {
         "facts": facts,
         "assumptions": assumptions,
@@ -237,7 +237,7 @@ def print_text(findings: list[Finding]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Lint Agent State Governance JSON state")
+    parser = argparse.ArgumentParser(description="Lint DraftLedger JSON state")
     parser.add_argument("state", type=Path, help="Path to .agent-state/state.json")
     parser.add_argument("--json", action="store_true", dest="as_json", help="Emit findings as JSON")
     parser.add_argument("--strict", action="store_true", help="Exit non-zero on warnings as well as errors")

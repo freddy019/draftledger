@@ -2,7 +2,7 @@
 
 Long-running agents can have a perfectly clean governed state and still reason from stale material if an old summary, handoff, memory fragment, or superseded instruction is still present in the *assembled reasoning context*.
 
-v0.6 introduces a declared **Context Manifest**. It records what materially entered a reasoning step and where it came from.
+DraftLedger uses a declared **Context Manifest**. It records what materially entered a reasoning step and where it came from.
 
 ## Visibility boundary
 

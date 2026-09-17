@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""State Diff + Dependency Revalidation for Agent State Governance.
+"""State Diff + Dependency Revalidation for DraftLedger.
 
 Compares two governed-state snapshots and identifies downstream decisions that
 must be revalidated because facts, assumptions, or instructions changed.
@@ -250,7 +250,7 @@ def print_text(changes: list[Change], reviews: list[Review]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Diff Agent State Governance snapshots and revalidate decision dependencies")
+    parser = argparse.ArgumentParser(description="Diff DraftLedger snapshots and revalidate decision dependencies")
     parser.add_argument("before", type=Path, help="Previous governed state JSON")
     parser.add_argument("after", type=Path, help="Current governed state JSON")
     parser.add_argument("--json", action="store_true", dest="as_json", help="Emit machine-readable report")

@@ -1,6 +1,6 @@
 # Semantic Retrieval
 
-v0.8 allows an embedding model, LLM retriever, vector database, or other semantic search system to improve recall without making that retriever authoritative.
+DraftLedger allows an embedding model, LLM retriever, vector database, or other semantic search system to improve recall without making that retriever authoritative.
 
 The design rule is:
 

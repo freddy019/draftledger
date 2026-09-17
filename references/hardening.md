@@ -1,6 +1,6 @@
 # Hardening and threat model
 
-v0.9 treats state management as a security boundary, not only a convenience layer.
+DraftLedger treats state management as a security boundary, not only a convenience layer.
 
 ## Threats in scope
 
@@ -68,7 +68,7 @@ The hardening check composes Context Lint and Context Trace findings; it is not 
 
 ## Release discipline
 
-Before a stable release:
+Before any public release:
 
 1. run the full unit suite;
 2. run deterministic fuzz/regression tests;

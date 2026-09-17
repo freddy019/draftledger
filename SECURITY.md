@@ -1,10 +1,10 @@
 # Security Policy
 
-Agent State Governance treats context assembly and governed state as a security boundary, but it does **not** claim to sandbox a model, inspect hidden host prompts, or make untrusted model output safe by itself.
+DraftLedger treats context assembly and governed state as a security boundary, but it does **not** claim to sandbox a model, inspect hidden host prompts, or make untrusted model output safe by itself.
 
 ## Supported versions
 
-Security fixes target the latest stable 1.x release. Release candidates and earlier development snapshots are not supported after v1.0.0.
+Security fixes target the latest public alpha. Alpha releases may change schemas, commands, and behavior without backward-compatibility guarantees.
 
 ## Security invariants
 

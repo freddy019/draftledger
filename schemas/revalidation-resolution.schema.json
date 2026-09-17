@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Agent State Governance Revalidation Resolution",
+  "title": "DraftLedger Revalidation Resolution",
   "type": "object",
   "required": ["version", "resolutions"],
   "properties": {

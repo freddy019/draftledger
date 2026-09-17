@@ -64,7 +64,7 @@ def _write_zip(output: Path, files: list[Path], root_name: str) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Audit and build Agent State Governance release archive")
+    parser = argparse.ArgumentParser(description="Audit and build DraftLedger release archive")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--skip-audit", action="store_true")
     args = parser.parse_args(argv)

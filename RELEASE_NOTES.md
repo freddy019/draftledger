@@ -1,24 +1,23 @@
-# Agent State Governance v1.1.0
+# DraftLedger v0.1.0-alpha.1
 
-v1.1.0 adds a governed relay file for multi-thread and multi-AI work. A project can now keep a machine-readable `.agent-state/handoff.json` beside governed state and coordinate independent work without relying on prose summaries or chat history.
+DraftLedger preserves the process that a finished artifact cannot reconstruct: verified facts, working assumptions, active instructions, decisions and their rationale, rejected directions, unresolved questions, and ownership across AI threads.
 
-The handoff board records:
+This first public alpha is aimed at long-running creative and knowledge projects such as copywriting, content planning, novels, scripts, worldbuilding, research synthesis, consulting reports, strategy, naming, and UX writing.
 
-- explicit work items, scopes, acceptance criteria, inputs, dependencies, and outputs;
-- one current owner per work item;
-- expiring leases with explicit, audited takeover;
-- optimistic revisions that reject stale writers;
-- progress, blockers, resolution, completion, and append-only coordination events;
-- an optional governed-state fingerprint for detecting stale work plans.
+## Included
 
-The new `scripts/handoff.py` CLI uses the same strict JSON handling, local process locking, and atomic writes as State VCS. A Markdown template provides human orientation, while the JSON board remains authoritative for claims and revisions. Handoff content is data-plane material and cannot authorize itself as an instruction. Completion records a result; review and integration remain explicit.
+- Typed governed state with lifecycle-aware facts, assumptions, instructions, decisions, and open items.
+- Context compilation, provenance tracing, contamination detection, semantic-retrieval gating, and a strict control/data boundary.
+- State diff, explicit decision revalidation, and append-only local state version control.
+- A machine-readable handoff board for multi-thread and multi-agent work, including claims, leases, takeovers, scope collision checks, dependencies, progress, blockers, cancellation, and completion.
+- Strict bounded JSON parsing, atomic writes, advisory locking, deterministic tests, release auditing, and reproducible ZIP packaging.
 
-## Compatibility
+## Alpha notice
 
-Python 3.11+; no third-party runtime dependencies. Package version is `1.1.0`; the state, context, and new handoff document protocols remain `1.0`. Existing v1.0 governed state needs no migration. Projects that do not need parallel coordination can omit the handoff files.
+Expect defects and breaking changes. Public schemas, commands, and workflows may change without backward-compatibility guarantees before v1.0. Do not run this preview unattended in critical production workflows.
 
-The lock coordinates processes on one host. Cross-machine writers on synchronized or network filesystems still require an external transaction service. Work leases do not transfer ownership automatically.
+The package version is `0.1.0-alpha.1`. Machine-readable state, context, and handoff documents currently use `version: "1.0"` as an internal format identifier retained from development; that identifier is not a public stability promise.
 
-## Verification
+Runtime: Python 3.11+ with no third-party runtime dependencies. `jsonschema` is used only by development and release verification.
 
-See [FINAL_AUDIT.md](FINAL_AUDIT.md) for executed checks and platform limits. The v1.1.0 ZIP and SHA-256 sidecar are prepared locally after final verification. GitHub publication has not been performed.
+See [FINAL_AUDIT.md](FINAL_AUDIT.md) for verification evidence and [SECURITY.md](SECURITY.md) for the trust boundary and known limits.

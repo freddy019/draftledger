@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.org/agent-state-governance/retrieval-gate-report.schema.json",
-  "title": "Agent State Governance Retrieval Gate Report",
+  "$id": "https://example.org/draftledger/retrieval-gate-report.schema.json",
+  "title": "DraftLedger Retrieval Gate Report",
   "type": "object",
   "required": ["version", "accepted", "rejected", "producer", "method"],
   "properties": {

@@ -1,10 +1,14 @@
-# Agent State Governance
+# DraftLedger（稿脉）
 
-**不要只是“记住上下文”，而要治理状态。**
+**面向长期 AI 创作的过程状态与多智能体接力层。**
 
-Agent State Governance 是一个面向长期 AI 任务的 Agent Skill。它在原始对话和模型推理之间增加一层轻量的“状态控制层”，防止事实、假设、指令、决策和压缩摘要在长时间任务中逐渐混为一谈。
+DraftLedger 是一个面向长期创作与知识工作的 Agent Skill。它保存成品本身无法呈现的过程：资料来源、约束、工作假设、被否决的方向、决策依据，以及不同 AI 线程之间的任务归属。
 
-**发布状态：** `1.1.0`。运行时要求 Python 3.11+，仅使用标准库；State 与 Handoff 的机器可读协议在稳定版本中保持为 `1.0`。
+> **实验性预览 · v0.1.0-alpha.1**
+>
+> 这是公开测试版本，预期会有问题和破坏性变更。Schema、命令和工作流都可能在没有兼容保证的情况下调整，请勿让它无人值守地运行在关键生产流程中。
+
+运行时要求 Python 3.11+，仅使用标准库。当前机器可读文档中的 `version: "1.0"` 是内部格式标识，不代表公开 Alpha 已提供稳定性承诺。
 
 ## 它解决什么问题
 
@@ -19,6 +23,18 @@ Agent State Governance 是一个面向长期 AI 任务的 Agent Skill。它在�
 - 用户无法知道究竟是哪条历史 prompt 还在影响模型。
 
 这套方法把问题定义为 **State Governance（状态治理）**，而不是简单的 Memory（记忆）问题。
+
+## 它适合什么项目
+
+DraftLedger 最适合那些**很难从最终结果倒推出创作过程**的项目，例如：
+
+- 文案、内容策划、营销活动、品牌语气与编辑日历；
+- 小说、剧本、游戏叙事、世界观设定等强连续性创作；
+- 研究综述、咨询报告、政策草案与战略规划；
+- 产品叙事、UX 文案、命名和定位项目；
+- 跨多轮、多天、多线程或多个 AI Agent 的长期内容工程。
+
+一份完成度很高的成品，通常看不出哪些事实已经核验、哪些仍是假设、某个方向为什么被否决、哪条要求已经失效，或下一步究竟由谁负责。DraftLedger 把这部分看不见的过程保留下来，使它可以检查、修订和接力。
 
 ## 核心结构
 
@@ -75,7 +91,7 @@ python scripts/context_compile.py examples/sample-state.json \
 
 ## Semantic Retrieval 与 Trust Boundary
 
-v0.8 开始允许 embedding、LLM retriever 或向量数据库参与上下文召回，但它们只有“提名权”，没有“解释权”和“指令权”。Retriever 只能返回已经存在于 Governed State 中的 ID 与 0~1 的相关度分数；Compiler 会重新检查 lifecycle、scope、exclude、authority 和 trust。
+DraftLedger 允许 embedding、LLM retriever 或向量数据库参与上下文召回，但它们只有“提名权”，没有“解释权”和“指令权”。Retriever 只能返回已经存在于 Governed State 中的 ID 与 0~1 的相关度分数；Compiler 会重新检查 lifecycle、scope、exclude、authority 和 trust。
 
 ```bash
 python scripts/retrieval_gate.py \
@@ -97,7 +113,7 @@ python scripts/context_compile.py examples/sample-state.json \
 
 ## Hardening
 
-v0.9 不再继续堆大功能，而是集中做可靠性与安全加固。所有 CLI 的 JSON 输入统一改为 strict parser：拒绝重复 key、`NaN/Infinity`、非法 UTF-8，并限制文件大小、嵌套深度、节点数量和单个字符串大小；关键状态写入使用同目录临时文件、`fsync` 与原子替换。State VCS 的变更操作增加进程级 advisory lock，Context Trace 也开始检测 summary provenance cycle。
+DraftLedger 对状态与控制边界进行了可靠性和安全加固。所有 CLI 的 JSON 输入使用 strict parser：拒绝重复 key、`NaN/Infinity`、非法 UTF-8，并限制文件大小、嵌套深度、节点数量和单个字符串大小；关键状态写入使用同目录临时文件、`fsync` 与原子替换。State VCS 的变更操作带有进程级 advisory lock，Context Trace 也会检测 summary provenance cycle。
 
 可以直接运行：
 
@@ -138,7 +154,7 @@ Potential conflicts: 1
 
 ## Context Lint
 
-从 v0.2 开始，Skill 除了语义层面的 `Context Audit`，还增加了确定性的 `Context Lint`。
+除了语义层面的 `Context Audit`，Skill 还提供确定性的 `Context Lint`。
 
 Audit 负责判断“当前状态是否仍然合理”；Lint 负责检查“状态是否违反了生命周期和依赖关系的不变量”。它可以机械检查：
 
@@ -161,7 +177,7 @@ python scripts/context_lint.py .agent-state/state.json --json
 
 ## State Diff 与依赖重验证
 
-只有“当前状态”还不够。事实、假设或指令发生变化后，旧决策可能仍然存在，但其前提已经失效。v0.3 新增 `State Diff`，比较两个状态快照，并沿着依赖关系找出需要重新验证的决策。
+只有“当前状态”还不够。事实、假设或指令发生变化后，旧决策可能仍然存在，但其前提已经失效。`State Diff` 会比较两个状态快照，并沿着依赖关系找出需要重新验证的决策。
 
 ```bash
 python scripts/state_diff.py before.json after.json
@@ -174,7 +190,7 @@ python scripts/state_diff.py before.json after.json --write-review-state state.r
 
 ## 显式 Revalidation Workflow
 
-`State Diff` 只能告诉我们“哪些旧决策已经不安全”，不能证明“替换前提以后旧结论仍然成立”。v0.4 增加了完整的 Revalidation Workflow。
+`State Diff` 只能告诉我们“哪些旧决策已经不安全”，不能证明“替换前提以后旧结论仍然成立”。Revalidation Workflow 负责显式处理这些结果。
 
 ```bash
 python scripts/state_diff.py before.json after.json \
@@ -202,7 +218,7 @@ Planner 可以沿 lineage 自动找到候选替代关系，例如 `F-001 -> F-00
 
 ## State Checkpoint、Branch、Rollback 与 Merge
 
-v0.5 增加了一层面向 Governed State 的轻量版本控制。它不是用来替代 Git，而是专门解决“同一个长期任务同时存在多套合理状态”的问题。
+DraftLedger 提供一层面向 Governed State 的轻量版本控制。它不是用来替代 Git，而是专门解决“同一个长期任务同时存在多套合理状态”的问题。
 
 例如，可以把保守方案留在 `main`，把激进方案放到 `scenario-b`，两边分别修改 Facts、Assumptions、Instructions 和 Decisions，而不会互相污染。
 
@@ -260,7 +276,7 @@ python scripts/handoff.py --board .agent-state/handoff.json claim W-docs \
 
 ## Context Provenance 与污染检测
 
-v0.6 开始区分两件以前很容易混在一起的事：**状态是否正确**，以及**真正送进模型推理的上下文是否来自正确状态**。
+Context Provenance 区分两件很容易混在一起的事：**状态是否正确**，以及**真正送进模型推理的上下文是否来自正确状态**。
 
 即使 Governed State 完全干净，旧摘要、旧 handoff、过期 memory fragment 或已经 superseded 的 instruction 仍然可能残留在当前上下文里。`context_trace.py` 用一个显式的 Context Manifest 记录本次推理实际声明使用了哪些状态和摘要，再与当前状态做校验。
 
@@ -301,27 +317,27 @@ python scripts/context_trace.py explain \
 把整个目录放入 Agent 支持的 skills 目录即可，例如：
 
 ```text
-.agents/skills/agent-state-governance/
-.claude/skills/agent-state-governance/
-.cursor/skills/agent-state-governance/
-.codex/skills/agent-state-governance/
+.agents/skills/draftledger/
+.claude/skills/draftledger/
+.cursor/skills/draftledger/
+.codex/skills/draftledger/
 ```
 
 然后可以直接要求：
 
 ```text
-为这个长期项目初始化 Agent State Governance。
-把已确认事实、工作假设、有效指令、已做决策和未决事项分开管理。
-任何摘要都不得把假设升级成事实；项目进入新阶段前执行一次 Context Audit。
+为这个长期创作项目启用 $draftledger。
+把已确认事实、工作假设、有效指令、已做决策、被否决方向和未决事项分开管理。
+任何摘要都不得把假设升级成事实；项目进入新阶段前执行 Context Audit，跨 AI 线程时使用 Handoff Board 接力。
 ```
 
 ## 当前版本
 
-`v1.1.0`：正式源码版本，新增多线程、多 AI 接力协作；State、Context 与 Handoff 协议保持为 `1.0`，运行时继续保持零第三方依赖。验证范围见 [最终审计](FINAL_AUDIT.md)，变更见 [发布说明](RELEASE_NOTES.md)。GitHub 发布准备与远端 CI 门禁见 [发布步骤](PUBLISHING.md)。
+`v0.1.0-alpha.1`：首个公开实验性预览，包含受治理状态、上下文审计以及多线程、多 AI 接力协作。运行时保持零第三方依赖。验证范围见 [最终审计](FINAL_AUDIT.md)，变更见 [发布说明](RELEASE_NOTES.md)，GitHub CI 门禁见 [发布步骤](PUBLISHING.md)。
 
 ## 发布前审计
 
-稳定版发布前运行完整审计：
+发布前运行完整审计：
 
 ```bash
 python -m pip install -r requirements-dev.txt

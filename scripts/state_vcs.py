@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Append-only state version control for Agent State Governance.
+"""Append-only state version control for DraftLedger.
 
 Provides checkpoints, branches, rollback, three-way merge, and ref-to-ref diff
 for governed state snapshots. Standard-library only.

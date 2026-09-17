@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.org/agent-state-governance/handoff.schema.json",
-  "title": "Agent State Governance Handoff Board",
+  "$id": "https://example.org/draftledger/handoff.schema.json",
+  "title": "DraftLedger Handoff Board",
   "type": "object",
   "required": ["version", "handoff_id", "revision", "project", "created_at", "updated_at", "coordination", "base_state", "agents", "work_items", "events"],
   "properties": {

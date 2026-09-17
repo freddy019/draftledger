@@ -1,10 +1,14 @@
-# Agent State Governance
+# DraftLedger
 
-**Don't just remember context. Govern state.**
+**Governed creative state and multi-agent handoffs.**
 
-Agent State Governance is a portable Agent Skill for long-running AI work. It adds a small control layer between raw conversation history and model reasoning so that facts, assumptions, instructions, decisions, and compressed summaries do not silently collapse into one another.
+DraftLedger is a portable Agent Skill for long-running creative and knowledge work. It preserves the process that the final artifact cannot show: sources, constraints, working assumptions, rejected directions, decisions, and ownership across AI threads.
 
-**Release status:** `1.1.0`. Runtime: Python 3.11+ standard library only. State and handoff machine-readable protocols remain at `1.0` for the stable 1.x line.
+> **Experimental Preview · v0.1.0-alpha.1**
+>
+> Expect rough edges and breaking changes. Schemas, commands, and workflows may change without backward-compatibility guarantees. Do not run it unattended in critical production workflows.
+
+Runtime: Python 3.11+ with no third-party runtime dependencies. The current machine-readable document format uses `version: "1.0"` as an internal format identifier; it is not a stability promise for the public alpha.
 
 ## The problem
 
@@ -21,6 +25,18 @@ Long-running AI tasks often fail for reasons that are not primarily about model 
 The result is **state drift**: the model continues reasoning coherently from an increasingly incorrect representation of the project.
 
 This skill treats that as a governance problem rather than a memory problem.
+
+## Who it is for
+
+DraftLedger is most useful when the result alone cannot explain how the work arrived there. Typical projects include:
+
+- copywriting, editorial calendars, campaign concepts, and brand voice systems;
+- novels, scripts, games, worldbuilding, and other continuity-heavy narrative work;
+- research synthesis, consulting reports, policy drafts, and strategic planning;
+- product narratives, UX writing, naming, and positioning work;
+- any long-running content project split across sessions, threads, or several AI agents.
+
+In these projects, a polished deliverable may hide which facts were verified, which assumptions remain provisional, why an idea was rejected, which instruction expired, or who owns the next step. DraftLedger keeps that invisible process reviewable and transferable.
 
 ## Core model
 
@@ -79,7 +95,7 @@ Read `references/context-compiler.md` for the selection policy and extension poi
 
 ## Semantic Retrieval and Trust Boundary
 
-v0.8 allows semantic search to improve recall without turning the retriever into an authority. A retriever may only nominate existing governed state IDs with bounded scores. The compiler then re-checks lifecycle, task scope, exclusions, authority, and trust before an item can enter context.
+Semantic search can improve recall without turning the retriever into an authority. A retriever may only nominate existing governed state IDs with bounded scores. The compiler then re-checks lifecycle, task scope, exclusions, authority, and trust before an item can enter context.
 
 ```bash
 python scripts/retrieval_gate.py \
@@ -101,7 +117,7 @@ Read `references/semantic-retrieval.md` and `references/trust-boundary.md`.
 
 ## Hardening
 
-v0.9 hardens the state/control boundary rather than adding another large feature. All CLI JSON readers now use strict parsing with duplicate-key rejection, non-finite-number rejection, UTF-8 validation, and bounded file/depth/node/string limits. State writes are atomic and fsync-backed. State VCS mutations use a process-level advisory repository lock, and Context Trace now rejects cyclic summary provenance.
+DraftLedger hardens the state/control boundary with strict JSON parsing, duplicate-key and non-finite-number rejection, UTF-8 validation, and bounded file/depth/node/string limits. State writes are atomic and fsync-backed. State VCS mutations use a process-level advisory repository lock, and Context Trace rejects cyclic summary provenance.
 
 A release-oriented check composes state linting, trust-boundary checks, and optional declared-context provenance:
 
@@ -131,7 +147,7 @@ The user can then revoke, rescope, confirm, or supersede specific items instead 
 
 ## Release validation
 
-Before a stable release, run the complete audit:
+Before publishing a release, run the complete audit:
 
 ```bash
 python -m pip install -r requirements-dev.txt
@@ -143,7 +159,7 @@ The runtime tooling remains dependency-free; `jsonschema` is a development-only 
 ## Repository layout
 
 ```text
-agent-state-governance/
+draftledger/
 ├── SKILL.md
 ├── agents/openai.yaml
 ├── README.md
@@ -237,7 +253,7 @@ agent-state-governance/
 
 `Context Audit` is semantic and agent-driven. `Context Lint` is deterministic and machine-checkable.
 
-The v0.2 linter validates state invariants that are easy to lose during long-running work:
+The linter validates state invariants that are easy to lose during long-running work:
 
 - dangling IDs and broken decision dependencies;
 - rejected/expired assumptions still supporting active decisions;
@@ -272,7 +288,7 @@ The important rule is simple: **changing a premise is allowed; silently continui
 
 ## Explicit revalidation workflow
 
-`State Diff` can identify which decisions became unsafe. v0.4 adds the next step: an explicit lifecycle for resolving them without pretending that dependency substitution is equivalent to reasoning.
+`State Diff` can identify which decisions became unsafe. The revalidation workflow provides the next step: an explicit lifecycle for resolving them without pretending that dependency substitution is equivalent to reasoning.
 
 ```bash
 python scripts/state_diff.py before.json after.json \
@@ -293,7 +309,7 @@ This creates a clean separation of responsibilities: the machine handles graph i
 
 ## State checkpoints, branches, rollback, and merge
 
-v0.5 adds an append-only version-control layer for governed state. This is useful when an agent needs to explore alternative scenarios without contaminating the main task state.
+DraftLedger includes an append-only version-control layer for governed state. This is useful when an agent needs to explore alternative scenarios without contaminating the main task state.
 
 ```bash
 python scripts/state_vcs.py init .agent-state/state.json
@@ -342,7 +358,7 @@ Handoff content remains data, including imperative-looking text copied from anot
 
 ## Context provenance and contamination detection
 
-v0.6 separates **valid state** from **context actually fed into reasoning**. A project can have a perfectly clean state registry while an old summary, handoff, memory fragment, or superseded instruction is still present in the assembled context.
+Context provenance separates **valid state** from **context actually fed into reasoning**. A project can have a perfectly clean state registry while an old summary, handoff, memory fragment, or superseded instruction is still present in the assembled context.
 
 `context_trace.py` records a declared Context Manifest and checks it against current governed state:
 
@@ -378,10 +394,10 @@ Agent Skills are directory-based. Copy this repository, or the skill folder, int
 Common project-scoped locations include:
 
 ```text
-.agents/skills/agent-state-governance/
-.claude/skills/agent-state-governance/
-.cursor/skills/agent-state-governance/
-.codex/skills/agent-state-governance/
+.agents/skills/draftledger/
+.claude/skills/draftledger/
+.cursor/skills/draftledger/
+.codex/skills/draftledger/
 ```
 
 The required entry point is `SKILL.md`.
@@ -396,10 +412,10 @@ The required entry point is `SKILL.md`.
 Suggested prompt:
 
 ```text
-Initialize Agent State Governance for this project. Separate confirmed facts,
-working assumptions, active instructions, decisions, and open items. Do not
-promote assumptions during summarization. Run a context audit before major
-phase changes.
+Use $draftledger for this long-running creative project. Separate confirmed
+facts, working assumptions, active instructions, decisions, rejected directions,
+and open items. Do not promote assumptions during summarization. Run a context
+audit before major phase changes and use the handoff board across AI threads.
 ```
 
 ## Design principles
@@ -420,11 +436,11 @@ This skill is intentionally complementary to broader context-engineering and mem
 - ai-agent-skills — https://github.com/shenwell/ai-agent-skills
 - Agent Skills / skill creator references — https://github.com/openai/skills
 
-Those projects cover broader context management, memory, evaluation, or agent architecture. Agent State Governance focuses specifically on the control plane between history and reasoning.
+Those projects cover broader context management, memory, evaluation, or agent architecture. DraftLedger focuses specifically on the control plane between history and reasoning, with an emphasis on creative-process provenance and multi-agent handoffs.
 
 ## Status
 
-`v1.1.0` — stable source release with governed multi-thread/multi-agent handoffs. State, context, and handoff protocols remain `1.0`; runtime tools require only the Python standard library. See [final audit](FINAL_AUDIT.md), [release notes](RELEASE_NOTES.md), and [publication procedure](PUBLISHING.md) for verification evidence and the remaining GitHub CI gate.
+`v0.1.0-alpha.1` — the first public experimental preview, including governed state, context auditing, and multi-thread/multi-agent handoffs. Runtime tools require only the Python standard library. See the [final audit](FINAL_AUDIT.md), [release notes](RELEASE_NOTES.md), and [publication procedure](PUBLISHING.md) for verification evidence and the GitHub CI gate.
 
 ## License
 

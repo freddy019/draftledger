@@ -1,6 +1,6 @@
 # State Model
 
-This reference defines the logical data model used by Agent State Governance.
+This reference defines the logical data model used by DraftLedger.
 
 ## Why typed state matters
 

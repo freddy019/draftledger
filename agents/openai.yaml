@@ -1,4 +1,4 @@
 interface:
-  display_name: "Agent State Governance"
-  short_description: "Govern state and coordinate AI handoffs"
-  default_prompt: "Use $agent-state-governance to govern this long-running task and coordinate auditable work handoffs across AI threads."
+  display_name: "DraftLedger"
+  short_description: "Trace creative state and AI handoffs"
+  default_prompt: "Use $draftledger to preserve this project's creative process, govern state, and coordinate auditable handoffs across AI threads."

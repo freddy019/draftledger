@@ -1,4 +1,4 @@
-"""Regression cases found during the 1.0.0 final audit."""
+"""Regression cases retained by the DraftLedger release audit."""
 import copy
 import json
 import sys
@@ -169,9 +169,9 @@ class FinalAuditTests(unittest.TestCase):
 
     def test_release_is_repeatable_and_excludes_local_secrets(self):
         with tempfile.TemporaryDirectory() as td:
-            root = Path(td) / "agent-state-governance"
+            root = Path(td) / "draftledger"
             root.mkdir()
-            (root / "VERSION").write_text("1.0.0\n")
+            (root / "VERSION").write_text("0.1.0-alpha.1\n")
             (root / ".env").write_text("SECRET=test")
             with patch.object(build_release, "ROOT", root):
                 one = build_release.deterministic_zip(Path(td) / "one.zip")

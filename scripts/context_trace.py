@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Context Provenance and Contamination Detection for Agent State Governance.
+"""Context Provenance and Contamination Detection for DraftLedger.
 
 This tool operates on *declared* reasoning context. It does not and cannot
 introspect opaque platform/system prompts. Hosts or agents can generate a

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hardened JSON I/O primitives for Agent State Governance.
+"""Hardened JSON I/O primitives for DraftLedger.
 
 Standard-library only. Rejects duplicate JSON keys and non-finite numbers,
 applies conservative resource limits, and writes files atomically.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compile a minimal, trust-bounded governed context for one reasoning task.
 
-v0.8 keeps semantic retrieval in a proposal-only role. A retriever may nominate
+DraftLedger keeps semantic retrieval in a proposal-only role. A retriever may nominate
 existing state IDs, but it cannot create instructions, bypass lifecycle/scope,
 or inject free-form text into the compiled context.
 

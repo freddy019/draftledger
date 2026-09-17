@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-release audit for Agent State Governance.
+"""Pre-release audit for DraftLedger.
 
 Standard-library at runtime; if ``jsonschema`` is installed (development only),
 validate published schemas and representative instances as well.
@@ -396,7 +396,7 @@ def print_findings(findings: list[Finding]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Audit Agent State Governance before a release")
+    parser = argparse.ArgumentParser(description="Audit DraftLedger before a release")
     parser.add_argument("--full", action="store_true", help="also run the complete unit test suite")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failure")
     args = parser.parse_args(argv)

@@ -3,7 +3,7 @@
   "handoff_id": "H-release",
   "revision": 5,
   "project": {
-    "name": "agent-state-governance",
+    "name": "draftledger",
     "objective": "Prepare a release using parallel documentation and verification workstreams."
   },
   "created_at": "2026-09-17T00:00:00Z",
