@@ -1,0 +1,7 @@
+{
+  "id": "margin-model",
+  "objective": "Prepare the next margin model using the current selling price and refund-rate assumption.",
+  "scope_ids": ["pricing-project", "margin-model"],
+  "require_ids": ["D-001"],
+  "exclude_ids": []
+}

@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "pricing-project",
+    "objective": "Maintain a reliable current pricing model across long-running conversations.",
+    "phase": "testing",
+    "updated_at": "2026-09-17"
+  },
+  "facts": [
+    {
+      "id": "F-001",
+      "statement": "The current normal selling price is 168.",
+      "source": "user-confirmed",
+      "scope": "project",
+      "status": "active",
+      "last_confirmed": "2026-09-16",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "A-001",
+      "statement": "Refund rate is 30% for sensitivity model 1.",
+      "confidence": "medium",
+      "scope": "sensitivity-model-1",
+      "reason": "Temporary modeling assumption requested by user.",
+      "validation_condition": "Replace with observed refund data when available.",
+      "status": "active",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "instructions": [
+    {
+      "id": "I-002",
+      "key": "default-price",
+      "instruction": "Use 228 as the default price.",
+      "scope": "project",
+      "scope_id": "pricing-project",
+      "priority": "normal",
+      "status": "superseded",
+      "created_at": "2026-06-01",
+      "superseded_by": "I-009",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    },
+    {
+      "id": "I-009",
+      "key": "default-price",
+      "instruction": "Use 168 as the default price unless an activity price is explicitly provided.",
+      "scope": "project",
+      "scope_id": "pricing-project",
+      "priority": "normal",
+      "status": "active",
+      "created_at": "2026-09-16",
+      "supersedes": "I-002",
+      "expiry_condition": "User provides a new default price.",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "decision": "Use 168 as the baseline in the next margin model.",
+      "rationale": "The user explicitly replaced the previous 228 baseline.",
+      "facts_used": [
+        "F-001"
+      ],
+      "assumptions_used": [
+        "A-001"
+      ],
+      "instructions_used": [
+        "I-009"
+      ],
+      "status": "active",
+      "authority": "advisory",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "open_items": [
+    {
+      "id": "O-001",
+      "type": "pending-verification",
+      "statement": "Replace the provisional refund rate with observed data.",
+      "status": "open",
+      "owner": "agent",
+      "authority": "advisory",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ]
+}

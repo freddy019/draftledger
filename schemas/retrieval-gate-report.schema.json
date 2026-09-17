@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agent-state-governance/retrieval-gate-report.schema.json",
+  "title": "Agent State Governance Retrieval Gate Report",
+  "type": "object",
+  "required": ["version", "accepted", "rejected", "producer", "method"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "producer": {"type": ["string", "null"]},
+    "method": {"type": ["string", "null"]},
+    "accepted": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "score", "registry", "authority", "trust_level"],
+        "properties": {
+          "id": {"type": "string"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "registry": {"type": "string"},
+          "authority": {"enum": ["control", "data", "advisory"]},
+          "trust_level": {"enum": ["trusted", "reviewed", "untrusted", "unknown"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": {
+          "position": {"type": "integer", "minimum": 0},
+          "id": {"type": "string"},
+          "reason": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agent-state-governance/compiled-context.schema.json",
+  "title": "Agent State Governance Compiled Context",
+  "type": "object",
+  "required": [
+    "version",
+    "created_at",
+    "project",
+    "task",
+    "selected_ids",
+    "selection_report",
+    "rendered_context",
+    "manifest",
+    "control_ids",
+    "data_ids"
+  ],
+  "properties": {
+    "version": {
+      "const": "1.0"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "id",
+        "objective",
+        "scope_ids",
+        "require_ids",
+        "exclude_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "objective": {
+          "type": "string"
+        },
+        "scope_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "require_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "selected_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "selection_report": {
+      "type": "object"
+    },
+    "rendered_context": {
+      "type": "string"
+    },
+    "manifest": {
+      "type": "object"
+    },
+    "control_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "data_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": true
+}

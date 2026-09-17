@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent State Governance Revalidation Resolution",
+  "type": "object",
+  "required": ["version", "resolutions"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "resolutions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision_id", "outcome", "rationale"],
+        "properties": {
+          "decision_id": {"type": "string", "pattern": "^D-[0-9]{3,}$"},
+          "outcome": {"enum": ["revalidated", "superseded", "reversed", "blocked"]},
+          "rationale": {"type": "string", "minLength": 1},
+          "facts_used": {"type": "array", "items": {"type": "string"}},
+          "assumptions_used": {"type": "array", "items": {"type": "string"}},
+          "instructions_used": {"type": "array", "items": {"type": "string"}},
+          "new_decision": {"type": "object"},
+          "create_open_item": {"type": "boolean"},
+          "owner": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "resolutions": [
+    {
+      "decision_id": "D-001",
+      "outcome": "superseded",
+      "rationale": "The confirmed price changed and the 30% refund assumption was rejected, so the old baseline model should not be reactivated by dependency substitution alone.",
+      "new_decision": {
+        "id": "D-002",
+        "decision": "Use 158 as the confirmed price baseline and keep refund rate unresolved until observed data is available.",
+        "rationale": "F-002 confirms the current price. No valid refund-rate assumption remains, so the model should not silently preserve 30%.",
+        "facts_used": ["F-002"],
+        "assumptions_used": [],
+        "instructions_used": ["I-002"]
+      }
+    }
+  ]
+}

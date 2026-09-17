@@ -1,0 +1,96 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "pricing-project",
+    "objective": "Maintain a reliable current pricing model.",
+    "phase": "testing",
+    "updated_at": "2026-09-17"
+  },
+  "source_state_version": "0.8",
+  "decision_count": 1,
+  "entries": [
+    {
+      "decision_id": "D-001",
+      "decision": "Use 168 and a 30% refund rate as the baseline model.",
+      "rationale": "Current confirmed price plus temporary refund assumption.",
+      "review_reason": "A-001 changed (status=rejected); A-001 is not a valid supporting assumption; F-001 changed (status=superseded); F-001 is no longer an active fact; I-001 changed (status=superseded); I-001 is no longer an active instruction",
+      "triggers": [
+        "A-001",
+        "F-001",
+        "I-001"
+      ],
+      "current_dependencies": {
+        "facts_used": [
+          "F-001"
+        ],
+        "assumptions_used": [
+          "A-001"
+        ],
+        "instructions_used": [
+          "I-001"
+        ]
+      },
+      "dependency_analysis": [
+        {
+          "dependency_id": "F-001",
+          "registry": "facts",
+          "status": "superseded",
+          "action": "candidate_replacement",
+          "replacement_id": "F-002",
+          "lineage": [
+            "F-001",
+            "F-002"
+          ],
+          "reason": "Candidate active fact is F-002; replacement is not automatic validation."
+        },
+        {
+          "dependency_id": "A-001",
+          "registry": "assumptions",
+          "status": "rejected",
+          "action": "block",
+          "replacement_id": null,
+          "reason": "Assumption status=rejected; no deterministic successor is defined."
+        },
+        {
+          "dependency_id": "I-001",
+          "registry": "instructions",
+          "status": "superseded",
+          "action": "candidate_replacement",
+          "replacement_id": "I-002",
+          "lineage": [
+            "I-001",
+            "I-002"
+          ],
+          "reason": "Candidate active instruction is I-002; replacement is not automatic validation."
+        }
+      ],
+      "candidate_migrations": [
+        {
+          "from": "F-001",
+          "to": "F-002",
+          "from_registry": "facts",
+          "to_registry": "facts",
+          "kind": "candidate_replacement"
+        },
+        {
+          "from": "I-001",
+          "to": "I-002",
+          "from_registry": "instructions",
+          "to_registry": "instructions",
+          "kind": "candidate_replacement"
+        }
+      ],
+      "blockers": [
+        "A-001"
+      ],
+      "semantic_review_required": true,
+      "allowed_outcomes": [
+        "revalidated",
+        "superseded",
+        "reversed",
+        "blocked"
+      ],
+      "guidance": "A successor dependency is only a candidate migration. Re-evaluate the conclusion under current state; do not reactivate the decision merely because replacements exist."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "broken-example"
+  },
+  "facts": [
+    {
+      "id": "F-001",
+      "statement": "Old price was 228.",
+      "source": "history",
+      "scope": "project",
+      "status": "superseded",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "A-001",
+      "statement": "Refund rate is 30%.",
+      "confidence": "medium",
+      "scope": "project",
+      "reason": "temporary",
+      "validation_condition": "",
+      "status": "rejected",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "instructions": [
+    {
+      "id": "I-001",
+      "key": "default-price",
+      "instruction": "Use 228.",
+      "scope": "project",
+      "scope_id": "broken-example",
+      "priority": "normal",
+      "status": "active",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    },
+    {
+      "id": "I-002",
+      "key": "default-price",
+      "instruction": "Use 168.",
+      "scope": "project",
+      "scope_id": "broken-example",
+      "priority": "normal",
+      "status": "active",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "decision": "Model at old price.",
+      "rationale": "legacy",
+      "facts_used": [
+        "F-001"
+      ],
+      "assumptions_used": [
+        "A-001"
+      ],
+      "instructions_used": [
+        "I-404"
+      ],
+      "status": "active",
+      "authority": "advisory",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "open_items": []
+}

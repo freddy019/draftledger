@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.agent-state/
+.venv/
+.env
+.env.*
+*.zip
+.release-audit-cache/
+*.zip.sha256

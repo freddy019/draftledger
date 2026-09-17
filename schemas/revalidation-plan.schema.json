@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent State Governance Revalidation Plan",
+  "type": "object",
+  "required": ["version", "decision_count", "entries"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "decision_count": {"type": "integer", "minimum": 0},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "decision_id", "decision", "triggers", "current_dependencies",
+          "dependency_analysis", "candidate_migrations", "blockers",
+          "semantic_review_required", "allowed_outcomes"
+        ],
+        "properties": {
+          "decision_id": {"type": "string", "pattern": "^D-[0-9]{3,}$"},
+          "decision": {"type": "string"},
+          "triggers": {"type": "array", "items": {"type": "string"}},
+          "candidate_migrations": {"type": "array", "items": {"type": "object"}},
+          "blockers": {"type": "array", "items": {"type": "string"}},
+          "semantic_review_required": {"const": true},
+          "allowed_outcomes": {
+            "type": "array",
+            "items": {"enum": ["revalidated", "superseded", "reversed", "blocked"]}
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

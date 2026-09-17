@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agent-state-governance/context-manifest.schema.json",
+  "title": "Agent State Governance Context Manifest",
+  "type": "object",
+  "required": [
+    "version",
+    "project",
+    "created_at",
+    "state_fingerprint",
+    "context_entries",
+    "summaries"
+  ],
+  "properties": {
+    "version": {
+      "const": "1.0"
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "state_fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "context_entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^CXT-[0-9]{3,}$"
+          },
+          "kind": {
+            "enum": [
+              "state",
+              "summary",
+              "unmanaged"
+            ]
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "registry": {
+            "enum": [
+              "facts",
+              "assumptions",
+              "instructions",
+              "decisions",
+              "open_items"
+            ]
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "included_via": {
+            "enum": [
+              "direct",
+              "summary",
+              "handoff",
+              "memory",
+              "host",
+              "manual",
+              "context-compiler"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "authority": {
+            "enum": [
+              "control",
+              "data",
+              "advisory"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted",
+              "unknown"
+            ]
+          },
+          "origin_kind": {
+            "enum": [
+              "user",
+              "system",
+              "agent",
+              "tool",
+              "file",
+              "web",
+              "import",
+              "unknown"
+            ]
+          },
+          "plane": {
+            "enum": [
+              "control",
+              "data"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "derived_from"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^S-[0-9]{3,}$"
+          },
+          "text": {
+            "type": "string"
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "pricing-project"
+  },
+  "created_at": "2026-09-17T00:00:00Z",
+  "state_fingerprint": "sha256:44a6ef3d5cda6d383ef5c0e99ffd2f0609371bfc99cba10bee8f92ab0cc9560a",
+  "context_entries": [
+    {
+      "id": "CXT-001",
+      "kind": "summary",
+      "source_id": "S-001",
+      "snapshot_hash": "sha256:ca0f38a7a2950b52a2271bab966f976a465ec9eba33b4f27e00f3aa815d58a8c",
+      "included_via": "summary"
+    },
+    {
+      "id": "CXT-002",
+      "kind": "state",
+      "source_id": "I-002",
+      "registry": "instructions",
+      "snapshot_hash": "sha256:232c4bf2691f4aee78b98096ba3b76160b15db81ad75fb46483700c569c98368",
+      "included_via": "handoff"
+    },
+    {
+      "id": "CXT-003",
+      "kind": "unmanaged",
+      "label": "legacy handoff note",
+      "included_via": "host",
+      "reason": "No lifecycle metadata"
+    }
+  ],
+  "summaries": [
+    {
+      "id": "S-001",
+      "text": "Use 228 as the default price.",
+      "derived_from": [
+        "I-002"
+      ]
+    }
+  ],
+  "notes": "Manifest records declared reasoning context; opaque host/system prompts are outside its visibility."
+}

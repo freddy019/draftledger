@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "producer": "example-semantic-retriever",
+  "method": "embedding",
+  "generated_at": "2026-09-17T00:00:00Z",
+  "candidates": [
+    {
+      "id": "A-001",
+      "score": 0.94,
+      "reason": "Refund assumptions are semantically related to margin deterioration even when wording differs."
+    },
+    {
+      "id": "F-001",
+      "score": 0.89,
+      "reason": "Current price is a direct model input."
+    }
+  ]
+}

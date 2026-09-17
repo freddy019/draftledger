@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "pricing-project"
+  },
+  "created_at": "2026-09-17T00:00:00Z",
+  "state_fingerprint": "sha256:44a6ef3d5cda6d383ef5c0e99ffd2f0609371bfc99cba10bee8f92ab0cc9560a",
+  "context_entries": [
+    {
+      "id": "CXT-001",
+      "kind": "state",
+      "source_id": "F-001",
+      "registry": "facts",
+      "snapshot_hash": "sha256:192d0953a3d900cf0dfde6a638cc4aeb63ed8e9f3bc47fd9c3580be4dcb9d5ae",
+      "included_via": "direct"
+    },
+    {
+      "id": "CXT-002",
+      "kind": "state",
+      "source_id": "A-001",
+      "registry": "assumptions",
+      "snapshot_hash": "sha256:7ec6b9cf772aba9ce68a174f95fc395a47997051b1520bf9e91524553db936b9",
+      "included_via": "direct"
+    },
+    {
+      "id": "CXT-003",
+      "kind": "state",
+      "source_id": "I-009",
+      "registry": "instructions",
+      "snapshot_hash": "sha256:62e6449f3e074d9b6062336d2cd42fe8f60bd34760c292fb552fa2558b7f46a9",
+      "included_via": "direct"
+    },
+    {
+      "id": "CXT-004",
+      "kind": "state",
+      "source_id": "D-001",
+      "registry": "decisions",
+      "snapshot_hash": "sha256:6fba966feff5b5ea9e1a790fd4c467bdc1b9781c4caed75b735b950f63559bc2",
+      "included_via": "direct"
+    }
+  ],
+  "summaries": [],
+  "notes": "Manifest records declared reasoning context; opaque host/system prompts are outside its visibility."
+}

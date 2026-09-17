@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent State Governance"
+  short_description: "Govern long-running AI task state"
+  default_prompt: "Audit and govern this long-running task state, separating facts, assumptions, instructions, decisions, and stale context before continuing the work."

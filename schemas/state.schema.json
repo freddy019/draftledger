@@ -1,0 +1,668 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/agent-state-governance/state.schema.json",
+  "title": "Agent State Governance State",
+  "type": "object",
+  "required": [
+    "version",
+    "project",
+    "facts",
+    "assumptions",
+    "instructions",
+    "decisions",
+    "open_items"
+  ],
+  "properties": {
+    "version": {
+      "const": "1.0",
+      "description": "Public state protocol version."
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "objective": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "source",
+          "scope",
+          "status",
+          "authority",
+          "trust_level",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^F-[0-9]{3,}$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "active",
+              "superseded",
+              "disputed"
+            ]
+          },
+          "last_confirmed": {
+            "type": "string"
+          },
+          "superseded_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "enum": [
+              "data"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted"
+            ]
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "user",
+                  "system",
+                  "agent",
+                  "tool",
+                  "file",
+                  "web",
+                  "import",
+                  "unknown"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "captured_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "confidence",
+          "scope",
+          "reason",
+          "validation_condition",
+          "status",
+          "authority",
+          "trust_level",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^A-[0-9]{3,}$"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string"
+          },
+          "validation_condition": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "confirmed",
+              "rejected",
+              "expired"
+            ]
+          },
+          "promoted_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "enum": [
+              "data"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted"
+            ]
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "user",
+                  "system",
+                  "agent",
+                  "tool",
+                  "file",
+                  "web",
+                  "import",
+                  "unknown"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "captured_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "instruction",
+          "scope",
+          "priority",
+          "status",
+          "authority",
+          "trust_level",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^I-[0-9]{3,}$"
+          },
+          "key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "instruction": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "enum": [
+              "global",
+              "project",
+              "task",
+              "step"
+            ]
+          },
+          "scope_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "critical"
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "superseded",
+              "expired",
+              "revoked"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "supersedes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "superseded_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expiry_condition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "enum": [
+              "control"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted"
+            ]
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "user",
+                  "system",
+                  "agent",
+                  "tool",
+                  "file",
+                  "web",
+                  "import",
+                  "unknown"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "captured_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "decision",
+          "rationale",
+          "status",
+          "authority",
+          "trust_level",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^D-[0-9]{3,}$"
+          },
+          "decision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "facts_used": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assumptions_used": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "instructions_used": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "active",
+              "superseded",
+              "reversed",
+              "needs_review"
+            ]
+          },
+          "superseded_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_triggered_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "review_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_validated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "validation_history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "at",
+                "outcome",
+                "triggers",
+                "rationale"
+              ],
+              "properties": {
+                "at": {
+                  "type": "string"
+                },
+                "outcome": {
+                  "enum": [
+                    "revalidated",
+                    "superseded",
+                    "reversed",
+                    "blocked"
+                  ]
+                },
+                "triggers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "rationale": {
+                  "type": "string"
+                },
+                "replacement_decision_id": {
+                  "type": "string"
+                },
+                "open_item_id": {
+                  "type": "string"
+                },
+                "dependencies_after": {
+                  "type": "object",
+                  "properties": {
+                    "facts_used": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "assumptions_used": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "instructions_used": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "authority": {
+            "enum": [
+              "advisory"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted"
+            ]
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "user",
+                  "system",
+                  "agent",
+                  "tool",
+                  "file",
+                  "web",
+                  "import",
+                  "unknown"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "captured_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "open_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "statement",
+          "status",
+          "authority",
+          "trust_level",
+          "origin"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^O-[0-9]{3,}$"
+          },
+          "type": {
+            "enum": [
+              "open-question",
+              "risk",
+              "blocker",
+              "pending-verification",
+              "pending-decision"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "open",
+              "resolved",
+              "dismissed"
+            ]
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "related_decision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "enum": [
+              "advisory"
+            ]
+          },
+          "trust_level": {
+            "enum": [
+              "trusted",
+              "reviewed",
+              "untrusted"
+            ]
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "user",
+                  "system",
+                  "agent",
+                  "tool",
+                  "file",
+                  "web",
+                  "import",
+                  "unknown"
+                ]
+              },
+              "ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "captured_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

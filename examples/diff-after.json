@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "pricing-project",
+    "objective": "Maintain a reliable current pricing model.",
+    "phase": "testing",
+    "updated_at": "2026-09-17"
+  },
+  "facts": [
+    {
+      "id": "F-001",
+      "statement": "The current normal selling price was 168.",
+      "source": "user-confirmed",
+      "scope": "project",
+      "status": "superseded",
+      "superseded_by": "F-002",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    },
+    {
+      "id": "F-002",
+      "statement": "The current normal selling price is 158.",
+      "source": "user-confirmed",
+      "scope": "project",
+      "status": "active",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "A-001",
+      "statement": "Refund rate is 30% for the current model.",
+      "confidence": "medium",
+      "scope": "project",
+      "reason": "Temporary modeling assumption.",
+      "validation_condition": "Replace with observed data.",
+      "status": "rejected",
+      "authority": "data",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "instructions": [
+    {
+      "id": "I-001",
+      "key": "default-price",
+      "instruction": "Use 168 as the default price.",
+      "scope": "project",
+      "scope_id": "pricing-project",
+      "priority": "normal",
+      "status": "superseded",
+      "superseded_by": "I-002",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    },
+    {
+      "id": "I-002",
+      "key": "default-price",
+      "instruction": "Use 158 as the default price.",
+      "scope": "project",
+      "scope_id": "pricing-project",
+      "priority": "normal",
+      "status": "active",
+      "supersedes": "I-001",
+      "authority": "control",
+      "trust_level": "trusted",
+      "origin": {
+        "kind": "user",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "decision": "Use 168 and a 30% refund rate as the baseline model.",
+      "rationale": "Current confirmed price plus temporary refund assumption.",
+      "facts_used": [
+        "F-001"
+      ],
+      "assumptions_used": [
+        "A-001"
+      ],
+      "instructions_used": [
+        "I-001"
+      ],
+      "status": "active",
+      "authority": "advisory",
+      "trust_level": "reviewed",
+      "origin": {
+        "kind": "agent",
+        "ref": "governed-state"
+      }
+    }
+  ],
+  "open_items": []
+}
