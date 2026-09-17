@@ -1,5 +1,11 @@
 # DraftLedger
 
+[**简体中文完整文档**](README.zh-CN.md) · **English**
+
+> **稿脉：面向长期 AI 创作的过程状态与多智能体接力层。**
+>
+> 适用于文案策划、小说、剧本、世界观、研究综述、咨询报告、品牌与产品叙事等难以从成品倒推出过程的项目。它把事实、假设、有效指令、决策依据、被否决方向、未决事项和多 AI 任务归属保存为可检查、可修订、可接力的项目状态。
+
 **Governed creative state and multi-agent handoffs.**
 
 DraftLedger is a portable Agent Skill for long-running creative and knowledge work. It preserves the process that the final artifact cannot show: sources, constraints, working assumptions, rejected directions, decisions, and ownership across AI threads.
@@ -7,6 +13,8 @@ DraftLedger is a portable Agent Skill for long-running creative and knowledge wo
 > **Experimental Preview · v0.1.0-alpha.1**
 >
 > Expect rough edges and breaking changes. Schemas, commands, and workflows may change without backward-compatibility guarantees. Do not run it unattended in critical production workflows.
+
+> 中文提示：这是公开测试版本，预期会有问题和破坏性变更。完整中文说明请阅读 [README.zh-CN.md](README.zh-CN.md)。
 
 Runtime: Python 3.11+ with no third-party runtime dependencies. The current machine-readable document format uses `version: "1.0"` as an internal format identifier; it is not a stability promise for the public alpha.
 
